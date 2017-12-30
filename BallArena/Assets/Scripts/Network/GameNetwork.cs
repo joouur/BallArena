@@ -27,19 +27,3 @@ public partial class GameNetwork : MonoBehaviour
     }
   }
 }
-
-public static class NetworkExtensionsAndtools
-{
-  public static void SocketEvent(this MonoBehaviour behaviour, string SocketName)
-  {
-    GameNetwork.socket.Emit(SocketName);
-  }
-  public static void SocketEvent(this Transform behaviour, string SocketName)
-  {
-    GameNetwork.socket.Emit(SocketName);
-  }
-  public static void SocketEvent(this GameObject behaviour, string SocketName)
-  {
-    GameNetwork.socket.Emit(SocketName);
-  }
-}
