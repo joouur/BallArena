@@ -3,16 +3,17 @@ using System;
 using System.Collections;
 using SocketIO;
 
-public class OnSocketEvent : NetworkFunctionComponent
+public class UpdateTransform : NetworkFunctionComponent
 {
-  
-}
-
-public class OnConnect : NetworkFunctionComponent
-{
+  public Transform transform;
   public override void Function(SocketIOEvent NetworkEvent)
   {
-    Debug.LogFormat("Calling {0}", SocketOnName);
+    if(NCallback() != null)
+    {
+
+    }
+    transform.position = transform.position.GetVector3FromJSon(NetworkEvent);
+    transform.rotation = transform.rotation.GetQuaternionFromJSon(NetworkEvent);
   }
 
   public override NetworkCallback NCallback(params System.Object[] ObjectsToAdd)
@@ -21,11 +22,11 @@ public class OnConnect : NetworkFunctionComponent
   }
 }
 
-public class OnRegister : NetworkFunctionComponent
+public class UpdateRotation : UpdateTransform
 {
   public override void Function(SocketIOEvent NetworkEvent)
   {
-    Debug.LogFormat("Calling {0}", SocketOnName);
+    transform.rotation = transform.rotation.GetQuaternionFromJSon(NetworkEvent);
   }
 
   public override NetworkCallback NCallback(params System.Object[] ObjectsToAdd)
@@ -34,11 +35,11 @@ public class OnRegister : NetworkFunctionComponent
   }
 }
 
-public class OnDisconnect : NetworkFunctionComponent
+public class UpdatePosition : UpdateTransform
 {
   public override void Function(SocketIOEvent NetworkEvent)
   {
-    Debug.LogFormat("Calling {0}", SocketOnName);
+    transform.position = transform.position.GetVector3FromJSon(NetworkEvent);
   }
 
   public override NetworkCallback NCallback(params System.Object[] ObjectsToAdd)

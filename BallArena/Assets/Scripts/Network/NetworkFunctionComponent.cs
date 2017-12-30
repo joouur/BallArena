@@ -10,7 +10,7 @@ public abstract class AbstractNetworkFunctions : INetworkFunctionFactory
   protected string SocketName;
   public string SocketOnName { get { return SocketName; } }
   public abstract void Function(SocketIOEvent NetworkEvent);
-  public abstract NetworkCallback NCallback();
+  public abstract NetworkCallback NCallback(params System.Object[] ObjectsToAdd);
 }
 
 [Serializable]
@@ -21,7 +21,7 @@ public class NetworkFunctionComponent : AbstractNetworkFunctions
     Debug.LogFormat("Calling {0}", SocketOnName);
   }
 
-  public override NetworkCallback NCallback()
+  public override NetworkCallback NCallback(params System.Object[] ObjectsToAdd)
   {
     throw new NotImplementedException();
   }
