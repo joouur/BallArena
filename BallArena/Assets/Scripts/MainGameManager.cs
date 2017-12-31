@@ -25,7 +25,7 @@ public class MainGameManager : MonoBehaviour
   {
     int ID = 0;
     Int32.TryParse(id, out ID);
-    if(Info == null)
+    if(Info == null && typeof(int) == ID.GetType())
     {
       AddPlayer(ID, FindPlayerInformation(ID));
     }

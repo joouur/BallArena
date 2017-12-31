@@ -23,7 +23,7 @@ public class BallController : MonoBehaviour
     if (ballRigidbody == null)
     { ballRigidbody = GetComponent<Rigidbody>(); }
     ballRigidbody.maxAngularVelocity = ballStats.MaxAngularSpeed;
-    networkUpdateComponent = GameNetwork.Instance.SocketDictionary["UpdateTransform"] as OnUpdateTransform;
+    networkUpdateComponent = GameNetwork.Instance.SocketDictionary["OnUpdateTransform"] as OnUpdateTransform;
   }
 
   public virtual void FixedUpdate()

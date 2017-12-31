@@ -9,7 +9,7 @@ public abstract class AbstractNetworkFunctions : INetworkFunctionFactory
 {
   [SerializeField]
   protected string SocketName;
-  public string SocketOnName { get { return SocketName; } }
+  public abstract string SocketOnName { get; }
   public abstract void Function(SocketIOEvent NetworkEvent);
   public NetworkCallback NCallback;
 }
@@ -17,6 +17,7 @@ public abstract class AbstractNetworkFunctions : INetworkFunctionFactory
 [Serializable]
 public class NetworkFunctionComponent : AbstractNetworkFunctions
 {
+  public override string SocketOnName { get { return null; } }
   public override void Function(SocketIOEvent NetworkEvent)
   {
     Debug.LogFormat("Calling {0}", SocketOnName);

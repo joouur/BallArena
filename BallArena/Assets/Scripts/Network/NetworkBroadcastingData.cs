@@ -16,21 +16,24 @@ public class NetworkBroadcastingData : ScriptableObject
    
   }
 
-  public void CreateDictionary(out Dictionary<string, INetworkFunctionFactory> SocketDictionary)
+  public Dictionary<string, NetworkFunctionComponent> CreateDictionary()
   {
-    SocketDictionary = new Dictionary<string, INetworkFunctionFactory>();
+    Dictionary<string, NetworkFunctionComponent> SocketDictionary = new Dictionary<string, NetworkFunctionComponent>();
     for (int i = 0; i < NetworkSocketEventNames.Count; ++i)
     {
-      INetworkFunctionFactory socketFunction = LoadNetworkClass(NetworkSocketEventNames[i]);
+      Debug.LogFormat("Finding {0}", NetworkSocketEventNames[i]);
+
+      NetworkFunctionComponent socketFunction = LoadNetworkClass(NetworkSocketEventNames[i]);
       if (socketFunction != null && SocketDictionary.ContainsKey(NetworkSocketEventNames[i]) == false &&
         SocketDictionary.ContainsValue(socketFunction) == false)
       {
         SocketDictionary.Add(NetworkSocketEventNames[i], socketFunction);
       }
     }
+    return SocketDictionary;
   }
-  static INetworkFunctionFactory LoadNetworkClass(string name)
+  public NetworkFunctionComponent LoadNetworkClass(string name)
   {
-    return Assembly.GetExecutingAssembly().CreateInstance(name) as INetworkFunctionFactory;
+    return Assembly.GetExecutingAssembly().CreateInstance(name) as NetworkFunctionComponent;
   }
 }

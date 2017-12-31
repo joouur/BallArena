@@ -8,22 +8,16 @@ var playersInGame = [];
 var playerSpeed = 3;
 
 io.on('connection', function(socket){
-  var thisPlayerId = shortid.generate();
+  var thisPlayerId = shortid.generate();  
   
-  var player = new Player(thisPlayerId, {x: 0, y: 0, z:0}, {x: 0, y: 0, z:0}, 0);
-  players[thisPlayerId] = player;
-  
-  console.log('Client connected, broadcasting spawn, id:', thisPlayerId);
+  players[thisPlayerId] = DoNewPlayer(socket, thisPlayerId);
 
-  socket.emit('Register', {ID: thisPlayerId});
-  socket.broadcast.emit('Spawn', {ID: thisPlayerId});
-  socke.broadcast.emit('RequestPosition');
+  console.log('Client connected, broadcasting spawn, id:', thisPlayerId);
   
-  player.SpawnPlayers(playersInGame);
+  SpawnPlayers(playersInGame, socket);
 
 
   socket.on('disconnect', function(){
     console.log('Client Disconnected');
-    playerCount--;
   })
 })

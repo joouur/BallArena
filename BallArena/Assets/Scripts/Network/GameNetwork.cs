@@ -10,11 +10,11 @@ public partial class GameNetwork : MonoBehaviour
 
   public static SocketIOComponent socket;
   public NetworkBroadcastingData Data;
-  public Dictionary<string, INetworkFunctionFactory> SocketDictionary = new Dictionary<string, INetworkFunctionFactory>();
+  public Dictionary<string, NetworkFunctionComponent> SocketDictionary = new Dictionary<string, NetworkFunctionComponent>();
 
   public void Start()
   {
-    Data.CreateDictionary(out SocketDictionary);
+    SocketDictionary = CreateDictionary();
     AddNetworkEvents();
   }
 
@@ -24,8 +24,23 @@ public partial class GameNetwork : MonoBehaviour
     { return; }
     for (int i = 0; i < Data.NetworkSocketEventNames.Count; ++i)
     {
-      GameNetwork.socket.On(SocketDictionary[Data.NetworkSocketEventNames[i]].SocketOnName, SocketDictionary[Data.NetworkSocketEventNames[i]].Function);
+      GameNetwork.socket.On(Data.NetworkSocketEventNames[i], SocketDictionary[Data.NetworkSocketEventNames[i]].Function);
     }
   }
+  public Dictionary<string, NetworkFunctionComponent> CreateDictionary()
+  {
+    Dictionary<string, NetworkFunctionComponent> SocketDictionary = new Dictionary<string, NetworkFunctionComponent>();
+    for (int i = 0; i < Data.NetworkSocketEventNames.Count; ++i)
+    {
+      Debug.LogFormat("Finding {0}", Data.NetworkSocketEventNames[i]);
 
+      NetworkFunctionComponent socketFunction = Data.LoadNetworkClass(Data.NetworkSocketEventNames[i]);
+      if (socketFunction != null && SocketDictionary.ContainsKey(Data.NetworkSocketEventNames[i]) == false &&
+        SocketDictionary.ContainsValue(socketFunction) == false)
+      {
+        SocketDictionary.Add(Data.NetworkSocketEventNames[i], socketFunction);
+      }
+    }
+    return SocketDictionary;
+  }
 }
