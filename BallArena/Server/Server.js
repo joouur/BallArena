@@ -3,40 +3,24 @@ var shortid = require('shortid');
 
 console.log('server started');
 
-var players = [];
+var playersInGame = [];
 
 var playerSpeed = 3;
 
 io.on('connection', function(socket){
   var thisPlayerId = shortid.generate();
   
-  var player = {
-      id: thisPlayerId,
-      destination: {
-      x: 0, 
-      y: 0
-      },
-      lastPosition: {
-          x: 0,
-          y: 0
-      },
-      lastMoveTime: 0
-  };
+  var player = new Player(thisPlayerId, {x: 0, y: 0, z:0}, {x: 0, y: 0, z:0}, 0);
   players[thisPlayerId] = player;
   
-  console.log('Client connected');
+  console.log('Client connected, broadcasting spawn, id:', thisPlayerId);
 
-  socket.broadcast.emit('spawn');
-  playerCount++;
-  for(i = 0; i < playerCount; ++i)
-  {
-    socket.emit('spawn');
-    console.log('Sending spawn to new Player');
-  }
+  socket.emit('Register', {ID: thisPlayerId});
+  socket.broadcast.emit('Spawn', {ID: thisPlayerId});
+  socke.broadcast.emit('RequestPosition');
+  
+  player.SpawnPlayers(playersInGame);
 
-  socket.on('move', function(data){
-    console.log('Client moved');    
-  })
 
   socket.on('disconnect', function(){
     console.log('Client Disconnected');

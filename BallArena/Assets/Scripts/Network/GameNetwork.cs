@@ -27,4 +27,5 @@ public partial class GameNetwork : MonoBehaviour
       GameNetwork.socket.On(SocketDictionary[Data.NetworkSocketEventNames[i]].SocketOnName, SocketDictionary[Data.NetworkSocketEventNames[i]].Function);
     }
   }
+
 }
