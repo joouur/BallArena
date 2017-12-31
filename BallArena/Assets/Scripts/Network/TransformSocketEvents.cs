@@ -3,47 +3,72 @@ using System;
 using System.Collections;
 using SocketIO;
 
-public class UpdateTransform : NetworkFunctionComponent
+public class OnUpdateTransform : NetworkFunctionComponent
 {
   public Transform transform;
   public override void Function(SocketIOEvent NetworkEvent)
   {
-    if(NCallback() != null)
+    if(NCallback != null)
     {
-
+      NCallback(NetworkEvent);
     }
     transform.position = transform.position.GetVector3FromJSon(NetworkEvent);
     transform.rotation = transform.rotation.GetQuaternionFromJSon(NetworkEvent);
   }
 
-  public override NetworkCallback NCallback(params System.Object[] ObjectsToAdd)
+  public void SetTransform(Transform transformToSet)
   {
-    throw new NotImplementedException();
+    transform = transformToSet;
   }
 }
 
-public class UpdateRotation : UpdateTransform
+public class OnUpdateRotation : OnUpdateTransform
 {
   public override void Function(SocketIOEvent NetworkEvent)
   {
     transform.rotation = transform.rotation.GetQuaternionFromJSon(NetworkEvent);
   }
-
-  public override NetworkCallback NCallback(params System.Object[] ObjectsToAdd)
-  {
-    throw new NotImplementedException();
-  }
 }
 
-public class UpdatePosition : UpdateTransform
+public class OnUpdatePosition : OnUpdateTransform
 {
   public override void Function(SocketIOEvent NetworkEvent)
   {
     transform.position = transform.position.GetVector3FromJSon(NetworkEvent);
   }
+}
 
-  public override NetworkCallback NCallback(params System.Object[] ObjectsToAdd)
+public class OnRequestTransform : NetworkFunctionComponent
+{
+  public Transform transform;
+  public override void Function(SocketIOEvent NetworkEvent)
   {
-    throw new NotImplementedException();
+    if (NCallback != null)
+    {
+      NCallback(NetworkEvent);
+    }
+    GameNetwork.socket.Emit(this.SocketName, Extensions.Vector3ToJson(transform.position));
+    GameNetwork.socket.Emit(this.SocketName, Extensions.QuaternionToJson(transform.rotation));
+  }
+
+  public void SetTransform(Transform transformToSet)
+  {
+    transform = transformToSet;
+  }
+}
+
+public class OnRequestRotation : OnUpdateTransform
+{
+  public override void Function(SocketIOEvent NetworkEvent)
+  {
+    GameNetwork.socket.Emit(this.SocketName, Extensions.QuaternionToJson(transform.rotation));
+  }
+}
+
+public class OnRequestPosition : OnUpdateTransform
+{
+  public override void Function(SocketIOEvent NetworkEvent)
+  {
+    GameNetwork.socket.Emit(this.SocketName, Extensions.Vector3ToJson(transform.position));
   }
 }

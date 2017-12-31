@@ -3,15 +3,9 @@ using System.Collections;
 
 public class PlayerInformation : MonoBehaviour
 {
+  private string ID;
 
-  // Use this for initialization
-  void Start()
-  {
-
-  }
-
-  // Update is called once per frame
-  void Update()
+  public void Initialize(string ID)
   {
 
   }

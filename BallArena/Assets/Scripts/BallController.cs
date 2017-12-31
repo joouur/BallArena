@@ -17,13 +17,13 @@ public class BallController : MonoBehaviour
   private Vector3 moveDirection;
   private bool jump;
 
-  private UpdateTransform networkUpdateComponent;
+  private OnUpdateTransform networkUpdateComponent;
   private void Start()
   {
     if (ballRigidbody == null)
     { ballRigidbody = GetComponent<Rigidbody>(); }
     ballRigidbody.maxAngularVelocity = ballStats.MaxAngularSpeed;
-    networkUpdateComponent = GameNetwork.Instance.SocketDictionary["UpdateTransform"] as UpdateTransform;
+    networkUpdateComponent = GameNetwork.Instance.SocketDictionary["UpdateTransform"] as OnUpdateTransform;
   }
 
   public virtual void FixedUpdate()

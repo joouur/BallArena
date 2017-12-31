@@ -7,6 +7,10 @@ public static class Extensions
   {
     return Mathf.Abs(target - second) < floatDiff;
   }
+  public static bool AlmostEquals(this Vector3 target, Vector3 second, float floatDiff)
+  {
+    return Mathf.Abs(target.x - second.x) < floatDiff && Mathf.Abs(target.y - second.y) < floatDiff && Mathf.Abs(target.z - second.z) < floatDiff;
+  }
   public static Vector3 GetVector3FromJSon(this Vector3 vector, SocketIO.SocketIOEvent Event)
   {
     vector.x = Event.data["x"].n;
@@ -36,7 +40,7 @@ public static class Extensions
   }
   public static Quaternion GetQuaternionFromJSon(SocketIO.SocketIOEvent Event)
   { return new Quaternion(Event.data["x"].n, Event.data["y"].n, Event.data["z"].n, Event.data["w"].n); }
-  public static JSONObject QuaternionToJson(this Quaternion quaternion)
+  public static JSONObject QuaternionToJson(Quaternion quaternion)
   {
     JSONObject j = new JSONObject(JSONObject.Type.OBJECT);
     j.AddField("x", quaternion.x);
@@ -45,7 +49,7 @@ public static class Extensions
     j.AddField("w", quaternion.w);
     return j;
   }
-  public static JSONObject VectorToJson(this Vector3 vector)
+  public static JSONObject Vector3ToJson(Vector3 vector)
   {
     JSONObject j = new JSONObject(JSONObject.Type.OBJECT);
     j.AddField("x", vector.x);

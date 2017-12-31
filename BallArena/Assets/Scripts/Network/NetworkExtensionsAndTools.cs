@@ -15,7 +15,7 @@ public static class NetworkExtensionsAndTools
   {
     GameNetwork.socket.Emit(SocketName);
   }
-  public static void SetUpdateForTransform(this Transform transform, UpdateTransform component)
+  public static void SetUpdateForTransform(this Transform transform, OnUpdateTransform component)
   {
     component.transform = transform;
     transform.SocketEvent(component.SocketOnName);

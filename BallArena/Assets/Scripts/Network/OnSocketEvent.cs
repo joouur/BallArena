@@ -12,12 +12,16 @@ public class OnConnect : NetworkFunctionComponent
 {
   public override void Function(SocketIOEvent NetworkEvent)
   {
-    Debug.LogFormat("Calling {0}", SocketOnName);
-  }
-
-  public override NetworkCallback NCallback(params System.Object[] ObjectsToAdd)
-  {
-    throw new NotImplementedException();
+    Debug.Log("Player has connected, checking registry...");
+    string ID = NetworkEvent.data["ID"].str;
+    if (MainGameManager.CheckForExistingPlayer(ID))
+    {
+      MainGameManager.PopulateExistingPlayerInformation(ID);
+    }
+    else
+    {
+      MainGameManager.CreateNewPlayerInformation(ID);
+    }
   }
 }
 
@@ -27,11 +31,6 @@ public class OnRegister : NetworkFunctionComponent
   {
     Debug.LogFormat("Calling {0}", SocketOnName);
   }
-
-  public override NetworkCallback NCallback(params System.Object[] ObjectsToAdd)
-  {
-    throw new NotImplementedException();
-  }
 }
 
 public class OnDisconnect : NetworkFunctionComponent
@@ -39,10 +38,5 @@ public class OnDisconnect : NetworkFunctionComponent
   public override void Function(SocketIOEvent NetworkEvent)
   {
     Debug.LogFormat("Calling {0}", SocketOnName);
-  }
-
-  public override NetworkCallback NCallback(params System.Object[] ObjectsToAdd)
-  {
-    throw new NotImplementedException();
   }
 }

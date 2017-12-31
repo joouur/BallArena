@@ -15,6 +15,7 @@ public partial class GameNetwork : MonoBehaviour
   public void Start()
   {
     Data.CreateDictionary(out SocketDictionary);
+    AddNetworkEvents();
   }
 
   public void AddNetworkEvents()
