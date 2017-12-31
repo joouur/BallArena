@@ -29,7 +29,8 @@ public class OnRegister : NetworkFunctionComponent
 {
   public override void Function(SocketIOEvent NetworkEvent)
   {
-    Debug.LogFormat("Calling {0}", SocketOnName);
+    Debug.LogFormat("Registering {0}", NetworkEvent.data["ID"].str);
+    MainGameManager.Instance.AddPlayer(NetworkEvent.data["ID"].str);
   }
 }
 
