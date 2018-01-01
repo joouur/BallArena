@@ -23,7 +23,7 @@ public class BallController : MonoBehaviour
     if (ballRigidbody == null)
     { ballRigidbody = GetComponent<Rigidbody>(); }
     ballRigidbody.maxAngularVelocity = ballStats.MaxAngularSpeed;
-    networkUpdateComponent = GameNetwork.Instance.SocketDictionary["OnUpdateTransform"] as OnUpdateTransform;
+    networkUpdateComponent = GameNetwork.GetNetworkComponent("OnUpdateTransform") as OnUpdateTransform;
   }
 
   public virtual void FixedUpdate()
@@ -97,9 +97,9 @@ public class BallStats
 
 public static class BallControllerExtension
 {
-  public static void OnMove(this BallController controller, Vector3 position, Quaternion rotation)
+  public static void OnMove(this BallController controller, Vector3 position, Quaternion rotation, float speed)
   {
-    controller.transform.position = position;
-    controller.transform.rotation = rotation;
+    controller.transform.position = Vector3.Lerp(controller.transform.position, position, Time.fixedDeltaTime * speed);
+    controller.transform.rotation = Quaternion.Lerp(controller.transform.rotation, rotation, Time.deltaTime * speed);
   }
 }
