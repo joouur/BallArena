@@ -48,7 +48,9 @@ public partial class GameNetwork : MonoBehaviour
 
   public NetworkFunctionComponent LoadNetworkClass(string name)
   {
-    return Assembly.GetExecutingAssembly().CreateInstance(name) as NetworkFunctionComponent;
+    NetworkFunctionComponent component = Assembly.GetExecutingAssembly().CreateInstance(name) as NetworkFunctionComponent;
+    component.SocketOnName = name;
+    return component;
   }
 
   public static NetworkFunctionComponent GetNetworkComponent(string name)

@@ -17,7 +17,7 @@ io.on('connection', function(socket){
   SpawnPlayers(playersInGame, socket);
 
 
-  socket.on('disconnect', function(){
+  socket.on('OnDisconnect', function(){
     console.log('Client Disconnected');
   })
 })
