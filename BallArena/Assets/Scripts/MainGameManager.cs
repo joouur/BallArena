@@ -14,7 +14,7 @@ public class MainGameManager : MonoBehaviour
 
   public static GameObject SpawnPlayer(string id)
   {
-    GameObject player = Instantiate(Instance.references.Player, Vector3.zero, Quaternion.identity) as GameObject;
+    GameObject player = Instantiate(Resources.Load(Instance.references.Player.name), Vector3.zero, Quaternion.identity) as GameObject;
     PlayerInformation info = player.GetComponent<PlayerInformation>();
     info.Initialize(id, player);
 
@@ -59,5 +59,13 @@ public class MainGameManager : MonoBehaviour
   public static bool CreateNewPlayerInformation(string ID)
   {
     return false;
+  }
+  public static PlayerInformation GetPlayer(string ID)
+  {
+    if(Instance.CurrentPlayersLUT.ContainsKey(ID) && Instance.CurrentPlayersLUT[ID] != null)
+    {
+      return Instance.CurrentPlayersLUT[ID];
+    }
+    return null;
   }
 }

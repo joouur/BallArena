@@ -36,7 +36,7 @@ public class CameraController : MonoBehaviour
   public static Vector3 CameraRight
   { get { return Instance.mainCamera.transform.right; } }
 
-  [SerializeField] private Transform TargetTransform;
+  public Transform TargetTransform;
   private BallController TargetController;
 
   private Transform PIVOT;

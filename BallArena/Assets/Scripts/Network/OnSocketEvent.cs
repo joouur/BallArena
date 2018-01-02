@@ -42,3 +42,17 @@ public class OnDisconnect : NetworkFunctionComponent
   }
 }
 
+public class OnSpawn : NetworkFunctionComponent
+{
+  public override void Function(SocketIOEvent NetworkEvent)
+  {
+    Debug.LogFormat("Calling {0}", SocketOnName);
+    GameObject player = MainGameManager.SpawnPlayer(NetworkEvent.data["ID"].str);
+
+    if(NetworkEvent.data["x"])
+    {
+      Vector3 position = player.transform.position.GetVector3FromJSon(NetworkEvent);
+      player.transform.position = position;
+    }
+  }
+}

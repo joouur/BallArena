@@ -3,13 +3,17 @@ using System.Collections;
 
 public class PlayerInformation : MonoBehaviour
 {
-  private string ID;
-  private GameObject PlayerObject;
+  private string id;
+  private GameObject playerObject;
+  private CameraController cameraCon;
 
 
-  public void Initialize(string ID, GameObject PlayerObject)
+  public void Initialize(string ID, GameObject PObject)
   {
-
+    id = ID;
+    playerObject = PObject;
+    cameraCon = FindObjectOfType<CameraController>();
+    cameraCon.TargetTransform = this.transform;
   }
   public void DestroyPlayer()
   { }

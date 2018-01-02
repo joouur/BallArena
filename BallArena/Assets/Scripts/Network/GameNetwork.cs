@@ -67,5 +67,4 @@ public partial class GameNetwork : MonoBehaviour
     Debug.LogWarningFormat("Compoenent {0} does not exist", name);
     return null;
   }
-
 }

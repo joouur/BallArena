@@ -5,20 +5,15 @@ using SocketIO;
 
 public class OnUpdateTransform : NetworkFunctionComponent
 {
-  public Transform transform;
   public override void Function(SocketIOEvent NetworkEvent)
   {
+    PlayerInformation player = MainGameManager.GetPlayer(NetworkEvent.data["ID"].str);
     if (NCallback != null)
     {
       NCallback(NetworkEvent);
     }
-    transform.position = transform.position.GetVector3FromJSon(NetworkEvent);
-    transform.rotation = transform.rotation.GetQuaternionFromJSon(NetworkEvent);
-  }
-
-  public void SetTransform(Transform transformToSet)
-  {
-    transform = transformToSet;
+    player.transform.position = player.transform.position.GetVector3FromJSon(NetworkEvent);
+    player.transform.rotation = player.transform.rotation.GetQuaternionFromJSon(NetworkEvent);
   }
 }
 
@@ -26,7 +21,8 @@ public class OnUpdateRotation : OnUpdateTransform
 {
   public override void Function(SocketIOEvent NetworkEvent)
   {
-    transform.rotation = transform.rotation.GetQuaternionFromJSon(NetworkEvent);
+    PlayerInformation player = MainGameManager.GetPlayer(NetworkEvent.data["ID"].str);
+    player.transform.rotation = player.transform.rotation.GetQuaternionFromJSon(NetworkEvent);
   }
 }
 
@@ -34,7 +30,8 @@ public class OnUpdatePosition : OnUpdateTransform
 {
   public override void Function(SocketIOEvent NetworkEvent)
   {
-    transform.position = transform.position.GetVector3FromJSon(NetworkEvent);
+    PlayerInformation player = MainGameManager.GetPlayer(NetworkEvent.data["ID"].str);
+    player.transform.position = player.transform.position.GetVector3FromJSon(NetworkEvent);
   }
 }
 
@@ -57,7 +54,7 @@ public class OnRequestTransform : NetworkFunctionComponent
   }
 }
 
-public class OnRequestRotation : OnUpdateTransform
+public class OnRequestRotation : OnRequestTransform
 {
   public override void Function(SocketIOEvent NetworkEvent)
   {
@@ -65,7 +62,7 @@ public class OnRequestRotation : OnUpdateTransform
   }
 }
 
-public class OnRequestPosition : OnUpdateTransform
+public class OnRequestPosition : OnRequestTransform
 {
   public override void Function(SocketIOEvent NetworkEvent)
   {
