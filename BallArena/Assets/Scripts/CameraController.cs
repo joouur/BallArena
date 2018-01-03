@@ -68,8 +68,11 @@ public class CameraController : MonoBehaviour
 
   private void FollowTargets(float deltaTime)
   {
-    if (!(deltaTime > 0 || TargetTransform == null))
-    { return; }
+    if (!(deltaTime > 0) || TargetTransform == null)
+    {
+      TargetTransform = MainGameManager.Instance.OwnerPlayer.transform;
+      return;
+    }
     Vector3 averageTransform = TargetTransform.transform.position;
     Vector3 lookAhead = Vector3.zero;
     averageTransform += Offset;

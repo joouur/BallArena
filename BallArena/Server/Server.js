@@ -46,12 +46,12 @@ class Player extends UnityObj{
     this.Destination = destination;
   }
 }
-function SpawnPlayers(ID, playersToSpawn, SocketToEmit){
+function SpawnPlayers(SocketToEmit, newID, playersToSpawn){
   for(var id in playersToSpawn)
   {
-    if(ID == id.id)
+    if(newID == id)
     { continue; }
-    SocketToEmit.emit('OnSpawn', playersToSpawn[id.id]);
+    SocketToEmit.emit('OnSpawn', playersToSpawn[id]);
     console.log('Sending spawn to new player for id:', id.id);
   }
 }
@@ -91,19 +91,16 @@ io.on('connection', function(socket){
 
   console.log('Client connected, broadcasting spawn, id:', thisPlayerId);
   
-  for(var id in playersInGame) {
-    if(thisPlayerId == id)
-     continue; 
-    socket.emit('OnSpawn', playersInGame[id]);
-    console.log('Sending spawn to new player for id:', id);
-  }
+  SpawnPlayers(socket, thisPlayerId, playersInGame)
 
   socket.on('OnUpdateTransform', function(data) {
     console.log("update position: ", data);
     data.id = thisPlayerId;
     socket.broadcast.emit('OnUpdateTransform', data);
-});
+  });
   socket.on('OnDisconnect', function(){
     console.log('Client Disconnected');
-  })
+    delete players[thisPlayerId];
+    socket.broadcast.emit('OnDisconnect', { id: thisPlayerId });
+  });
 })

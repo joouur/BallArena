@@ -5,23 +5,25 @@ using SocketIO;
 
 public class BallController : MonoBehaviour
 {
-  public static SocketIOComponent socket;
-
   private Rigidbody ballRigidbody;
   private SphereCollider mainBallCollider;
   public List<Collider> PowerUpColliders = new List<Collider>();
 
   public BallStats ballStats;
-
   private const float GroundRayLength = 1f;
   private Vector3 moveDirection;
   private bool jump;
+
+  private PlayerInformation playerInformation;
+  private OnMoveEvent onMoveEvent;
 
   private void Start()
   {
     if (ballRigidbody == null)
     { ballRigidbody = GetComponent<Rigidbody>(); }
     ballRigidbody.maxAngularVelocity = ballStats.MaxAngularSpeed;
+    playerInformation = GetComponent<PlayerInformation>();
+    onMoveEvent = GameNetwork.GetNetworkComponent("OnMoveEvent") as OnMoveEvent;
   }
 
   public virtual void FixedUpdate()
@@ -63,8 +65,33 @@ public class BallController : MonoBehaviour
       ballRigidbody.AddForce(Vector3.up * ballStats.MaxJumpPower, ForceMode.Impulse);
       jump = false;
     }
+    JSONObject jObj = new JSONObject(JSONObject.Type.OBJECT);
+    jObj.AddField("jp", jump);
+    jObj.AddField("d", Extensions.Vector3ToJson(direction));
+    jObj.AddField("ID", playerInformation.ID);
+    GameNetwork.socket.Emit("OnMove", jObj);
   }
 
+  public void MoveOther(Vector3 direction, bool jump)
+  {
+    if (Physics.Raycast(transform.position, Vector3.down, GroundRayLength) == false)
+    {
+      return;
+    }
+    if (ballStats.UsingTorque)
+    {
+      ballRigidbody.AddTorque(new Vector3(direction.z, 0, -direction.x) * ballStats.MovingPower);
+    }
+    else
+    {
+      ballRigidbody.AddTorque(direction * ballStats.MovingPower);
+    }
+    if (jump)
+    {
+      ballRigidbody.AddForce(Vector3.up * ballStats.MaxJumpPower, ForceMode.Impulse);
+      jump = false;
+    }
+  }
   public Vector3 CalculateForceToSend(Vector3 Direction, Vector3 Velocity)
   {
     float forceLowEnd = 10, forceHighEnd = 250;

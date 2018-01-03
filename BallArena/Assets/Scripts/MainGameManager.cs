@@ -10,19 +10,32 @@ public class MainGameManager : MonoBehaviour
   public static MainGameManager Instance { get { if (_instance == null) { MainGameManager i = FindObjectOfType<MainGameManager>(); _instance = i; } return _instance; } }
 
   public Dictionary<string, PlayerInformation> CurrentPlayersLUT = new Dictionary<string, PlayerInformation>();
+
   public ResourcesReferences references;
+  public GameObject OwnerPlayer;
 
   public static GameObject SpawnPlayer(string id)
   {
+    Debug.LogFormat("Spawning {0}", id);
     GameObject player = Instantiate(Resources.Load(Instance.references.Player.name), Vector3.zero, Quaternion.identity) as GameObject;
     PlayerInformation info = player.GetComponent<PlayerInformation>();
     info.Initialize(id, player);
+    if (Instance.OwnerPlayer == null)
+    {
+      Instance.OwnerPlayer = player;
+      info.Controller.enabled = true;
+    } else { info.Controller.enabled = false; }
 
     return player;
   }
 
   public void AddPlayer(string id, PlayerInformation Info = null)
   {
+    if (OwnerPlayer == null)
+    {
+      OwnerPlayer = SpawnPlayer(id);
+      Info = OwnerPlayer.GetComponent<PlayerInformation>();
+    }
     if (CurrentPlayersLUT.ContainsKey(id) == false)
     {
       CurrentPlayersLUT.Add(id, Info);
