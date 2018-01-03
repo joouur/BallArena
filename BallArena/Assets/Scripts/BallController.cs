@@ -15,7 +15,9 @@ public class BallController : MonoBehaviour
   private bool jump;
 
   private PlayerInformation playerInformation;
-  private OnMoveEvent onMoveEvent;
+
+  private OnUpdateTransform onUpdateTransform;
+  private OnRequestTransform onRequestTransform;
 
   private void Start()
   {
@@ -23,12 +25,15 @@ public class BallController : MonoBehaviour
     { ballRigidbody = GetComponent<Rigidbody>(); }
     ballRigidbody.maxAngularVelocity = ballStats.MaxAngularSpeed;
     playerInformation = GetComponent<PlayerInformation>();
-    onMoveEvent = GameNetwork.GetNetworkComponent("OnMoveEvent") as OnMoveEvent;
+    onUpdateTransform = GameNetwork.GetNetworkComponent("OnUpdateTransform") as OnUpdateTransform;
+    onRequestTransform = GameNetwork.GetNetworkComponent("OnRequestTransform") as OnRequestTransform;
+    onRequestTransform.transform = this.transform;
   }
 
   public virtual void FixedUpdate()
   {
     Move(moveDirection, jump);
+    GameNetwork.socket.Emit("OnUpdateTransform", playerInformation.JSONID(this.transform));
   }
 
   public virtual void Update()
@@ -60,32 +65,6 @@ public class BallController : MonoBehaviour
     { ballRigidbody.AddTorque(new Vector3(direction.z, 0, -direction.x) * ballStats.MovingPower); }
     else
     { ballRigidbody.AddTorque(direction * ballStats.MovingPower); }
-    if (jump)
-    {
-      ballRigidbody.AddForce(Vector3.up * ballStats.MaxJumpPower, ForceMode.Impulse);
-      jump = false;
-    }
-    JSONObject jObj = new JSONObject(JSONObject.Type.OBJECT);
-    jObj.AddField("jp", jump);
-    jObj.AddField("d", Extensions.Vector3ToJson(direction));
-    jObj.AddField("ID", playerInformation.ID);
-    GameNetwork.socket.Emit("OnMove", jObj);
-  }
-
-  public void MoveOther(Vector3 direction, bool jump)
-  {
-    if (Physics.Raycast(transform.position, Vector3.down, GroundRayLength) == false)
-    {
-      return;
-    }
-    if (ballStats.UsingTorque)
-    {
-      ballRigidbody.AddTorque(new Vector3(direction.z, 0, -direction.x) * ballStats.MovingPower);
-    }
-    else
-    {
-      ballRigidbody.AddTorque(direction * ballStats.MovingPower);
-    }
     if (jump)
     {
       ballRigidbody.AddForce(Vector3.up * ballStats.MaxJumpPower, ForceMode.Impulse);

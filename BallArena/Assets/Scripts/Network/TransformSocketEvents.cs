@@ -69,16 +69,3 @@ public class OnRequestPosition : OnRequestTransform
     GameNetwork.socket.Emit(this.SocketOnName, Extensions.Vector3ToJson(transform.position));
   }
 }
-
-public class OnMoveEvent : NetworkFunctionComponent
-{
-  public override void Function(SocketIOEvent NetworkEvent)
-  {
-    PlayerInformation player = MainGameManager.GetPlayer(NetworkEvent.data["ID"].str);
-    if (NCallback != null)
-    {
-      NCallback(NetworkEvent);
-    }
-    player.Controller.MoveOther(Extensions.GetVector3FromJSon(NetworkEvent), NetworkEvent.data["jp"].b);
-  }
-}

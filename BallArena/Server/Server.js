@@ -52,7 +52,7 @@ function SpawnPlayers(SocketToEmit, newID, playersToSpawn){
     if(newID == id)
     { continue; }
     SocketToEmit.emit('OnSpawn', playersToSpawn[id]);
-    console.log('Sending spawn to new player for id:', id.id);
+    console.log('Sending spawn to new player for id:', id);
   }
 }
 
@@ -94,8 +94,8 @@ io.on('connection', function(socket){
   SpawnPlayers(socket, thisPlayerId, playersInGame)
 
   socket.on('OnUpdateTransform', function(data) {
-    console.log("update position: ", data);
-    data.id = thisPlayerId;
+    data.ID = thisPlayerId;
+    console.log('Updating x:', data.dx);
     socket.broadcast.emit('OnUpdateTransform', data);
   });
   socket.on('OnDisconnect', function(){

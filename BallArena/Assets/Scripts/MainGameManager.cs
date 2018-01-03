@@ -24,7 +24,9 @@ public class MainGameManager : MonoBehaviour
     {
       Instance.OwnerPlayer = player;
       info.Controller.enabled = true;
-    } else { info.Controller.enabled = false; }
+      info.SetCamera();
+    }
+    else { info.Controller.enabled = false; }
 
     return player;
   }
